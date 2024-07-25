@@ -14,7 +14,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { setEditPost } = useMyContext();
 
-  const handleDelete = async (postId: any) => {
+  const handleDelete = async (postId: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
       await deletePost(postId);
     }
@@ -42,7 +42,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <button onClick={() => setEditPost(post)}>Edit</button>
         <button
           onClick={() => {
-            handleDelete(post._id);
+            if (post._id) {
+              handleDelete(post._id.toString());
+            }
           }}
         >
           Delete

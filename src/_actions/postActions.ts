@@ -2,14 +2,41 @@
 
 import dbConnect from "@/db/dbConnect";
 import Post from "@/models/postModels";
-import { Document } from "mongoose";
+import Post2 from "@/models/postModels";
+import mongoose, { Document } from "mongoose";
 import { Data } from "@/types";
 import { revalidatePath } from "next/cache";
 
+interface DataDocument extends Document<mongoose.Types.ObjectId>, Data {}
+
+//getData with exec to get document  methods
+//This approach uses Mongoose’s .exec() method to execute the query.
 export async function getPosts() {
   try {
     await dbConnect();
-    const posts: Data[] = await Post.find().lean();
+    const posts: DataDocument[] = await Post.find().exec();
+    return {
+      posts: posts.map((post: any) => ({
+        ...post.toObject(),
+        _id: post._id.toString(),
+      })),
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        error: error.message || "Failed to fetct post!",
+        status: "ERROR",
+      };
+    }
+    return { error: "An unknown error occurred", status: "ERROR" };
+  }
+}
+
+// getData // This approach uses Mongoose’s .lean() method to get plain JavaScript objects from MongoDB.
+export async function getPost() {
+  try {
+    await dbConnect();
+    const posts = await Post2.find().lean();
     return { posts };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -30,7 +57,9 @@ export async function createPost(body: Data) {
 
     revalidatePath("/");
 
-    return { ...newPost.toObject(), _id: newPost._id.toString() };
+    const postObject = newPost.toObject();
+
+    return { ...postObject, _id: postObject._id.toString() };
   } catch (error: unknown) {
     if (error instanceof Error) {
       return {
@@ -64,7 +93,9 @@ export async function updatePost({
 
     revalidatePath("/");
 
-    return { ...post.toObject(), _id: post._id.toString() };
+    const postObject = post.toObject();
+
+    return { ...postObject, _id: postObject._id.toString() };
   } catch (error: unknown) {
     if (error instanceof Error) {
       return {
@@ -93,7 +124,8 @@ export async function deletePost(postId: string) {
 
     revalidatePath("/");
 
-    return { ...post.toObject(), _id: post._id.toString() };
+    const postObject = post.toObject();
+    return { ...postObject, _id: postObject._id.toString() };
   } catch (error: unknown) {
     if (error instanceof Error) {
       return {
