@@ -29,6 +29,7 @@ export async function createPost(body: Data) {
     await newPost.save();
 
     revalidatePath("/");
+
     return { ...newPost.toObject(), _id: newPost._id.toString() };
   } catch (error: unknown) {
     if (error instanceof Error) {

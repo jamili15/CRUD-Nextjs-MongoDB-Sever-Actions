@@ -1,7 +1,7 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 export type Data = {
-  _id?: ObjectId;
+  _id?: mongoose.Types.ObjectId;
   title: string;
   image: string;
 };
