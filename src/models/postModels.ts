@@ -22,7 +22,7 @@ const postSchema: Schema = new mongoose.Schema(
       required: true,
     },
   },
-  { collection: "post", timestamps: true }
+  { collection: "post", timestamps: false, versionKey: false }
 );
 
 const Post =
