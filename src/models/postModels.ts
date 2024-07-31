@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface DataDocument extends Document {
-  _id: any;
+  _id: string;
   title: string;
   description: string;
   image: string;
@@ -9,6 +9,10 @@ export interface DataDocument extends Document {
 
 const postSchema: Schema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,

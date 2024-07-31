@@ -1,9 +1,10 @@
-import { getPosts } from "@/_actions/postActions";
+import { getAllPosts } from "@/_actions/postActions";
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
+import Image from "next/image";
 
 export default async function Home() {
-  const { posts, error } = await getPosts();
+  const { posts, error } = await getAllPosts();
   console.log("POST", posts);
 
   return (

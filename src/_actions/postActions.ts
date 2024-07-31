@@ -8,15 +8,33 @@ import { revalidatePath } from "next/cache";
 
 //getData with exec to get document  methods
 //This approach uses Mongoose’s .exec() method to execute the query.
-export async function getPosts() {
+export async function getAllPosts() {
   try {
     await dbConnect();
     const posts: DataDocument[] = await Post.find().exec();
+
+    const newData = posts.map((post: any) => ({
+      ...post._doc,
+      _id: post._id.toString(),
+    }));
+
+    return { posts: newData };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: message };
+  }
+}
+
+export async function getOnePost({ _id }: { _id: string }) {
+  try {
+    await dbConnect();
+    const post = await Post.findById(_id).exec();
     return {
-      posts: posts.map((post: any) => ({
-        ...post.toObject(),
-        _id: post._id.toString(),
-      })),
+      post: {
+        ...post?.toObject(),
+        _id: post?._id.toString(),
+      },
     };
   } catch (error: unknown) {
     const message =

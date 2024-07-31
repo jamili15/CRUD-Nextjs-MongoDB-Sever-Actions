@@ -27,41 +27,38 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       ? post.image
       : "/default-image.svg";
 
-  const editPost = router.push("/");
+  const editPost = () => {
+    router.push("/");
+  };
 
   return (
-    <div className=" flex flex-col items-center">
+    <div className="flex flex-col items-center">
       <div className="flex flex-col bg-gray-200 rounded items-center justify-center p-5">
-        <Link href={"/"}>
+        <Link href={`/post/${post._id}`}>
           <Image
             src={imageUrl}
-            alt={post?.title}
+            alt={post.title}
             className="rounded"
             quality={100}
             width={200}
             height={200}
             priority
           />
-          <h3 className="text-center py-2 pb-3 font-bold">{post?.title}</h3>
-          <h3>{post?.description}</h3>
+          <h3 className="text-center py-2 pb-3 font-bold">{post.title}</h3>
+          <h3>{post.description}</h3>
         </Link>
       </div>
       <div className="flex gap-20 pt-3">
         <button
           onClick={() => {
             setEditPost(post);
-            editPost;
+            editPost();
           }}
           className="bg-green-200 px-4 rounded"
         >
           Edit
         </button>
-        <button
-          onClick={() => {
-            handleDelete();
-          }}
-          className="bg-red-200 px-4 rounded"
-        >
+        <button onClick={handleDelete} className="bg-red-200 px-4 rounded">
           Delete
         </button>
       </div>
