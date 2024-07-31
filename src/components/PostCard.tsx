@@ -23,7 +23,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   const imageUrl =
-    post.image.startsWith("/") || post.image.startsWith("http")
+    post?.image?.startsWith("/") || post?.image?.startsWith("http")
       ? post.image
       : "/default-image.svg";
 
