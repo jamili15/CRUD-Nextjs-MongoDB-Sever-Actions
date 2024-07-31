@@ -1,11 +1,19 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { Data } from "@/types";
 
-interface DataDocument extends Document<mongoose.Types.ObjectId>, Data {}
+export interface DataDocument extends Document {
+  _id: string | number;
+  title: string;
+  description: string;
+  image: string;
+}
 
 const postSchema: Schema = new mongoose.Schema(
   {
     title: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },

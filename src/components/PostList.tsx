@@ -1,9 +1,9 @@
 import React from "react";
 import PostCard from "./PostCard";
-import { Data } from "@/types";
+import { DataDocument } from "@/models/postModels";
 
 interface PostProps {
-  posts: Data[];
+  posts: DataDocument[];
 }
 
 const PostList: React.FC<PostProps> = ({ posts }) => {

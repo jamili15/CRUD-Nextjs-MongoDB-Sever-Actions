@@ -3,20 +3,20 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { Data } from "@/types";
 import { useMyContext } from "@/context/Provider";
 import { deletePost } from "@/_actions/postActions";
+import { DataDocument } from "@/models/postModels";
 
 interface PostCardProps {
-  post: Data;
+  post: DataDocument;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { setEditPost } = useMyContext();
 
-  const handleDelete = async (postId: string) => {
+  const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete?")) {
-      await deletePost(postId);
+      await deletePost({ _id: post._id });
     }
   };
 
@@ -26,26 +26,34 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       : "/default-image.svg";
 
   return (
-    <div>
-      <Link href={"/"}>
-        <Image
-          src={imageUrl}
-          alt={post?.title}
-          quality={100}
-          width={200}
-          height={200}
-          priority
-        />
-        <h3>{post?.title}</h3>
-      </Link>
-      <div className="flex gap-20">
-        <button onClick={() => setEditPost(post)}>Edit</button>
+    <div className=" flex flex-col items-center">
+      <div className="flex flex-col bg-gray-200 rounded items-center justify-center p-5">
+        <Link href={"/"}>
+          <Image
+            src={imageUrl}
+            alt={post?.title}
+            className="rounded"
+            quality={100}
+            width={200}
+            height={200}
+            priority
+          />
+          <h3 className="text-center py-2 pb-3 font-bold">{post?.title}</h3>
+          <h3>{post?.description}</h3>
+        </Link>
+      </div>
+      <div className="flex gap-20 pt-3">
+        <button
+          onClick={() => setEditPost(post)}
+          className="bg-green-200 px-4 rounded"
+        >
+          Edit
+        </button>
         <button
           onClick={() => {
-            if (post._id) {
-              handleDelete(post._id.toString());
-            }
+            handleDelete();
           }}
+          className="bg-red-200 px-4 rounded"
         >
           Delete
         </button>

@@ -1,13 +1,10 @@
 "use server";
 
 import dbConnect from "@/db/dbConnect";
-import Post from "@/models/postModels";
+import Post, { DataDocument } from "@/models/postModels";
 import Post2 from "@/models/postModels";
-import mongoose, { Document } from "mongoose";
-import { Data } from "@/types";
-import { revalidatePath } from "next/cache";
 
-interface DataDocument extends Document<mongoose.Types.ObjectId>, Data {}
+import { revalidatePath } from "next/cache";
 
 //getData with exec to get document  methods
 //This approach uses Mongoose’s .exec() method to execute the query.
@@ -22,13 +19,9 @@ export async function getPosts() {
       })),
     };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        error: error.message || "Failed to fetct post!",
-        status: "ERROR",
-      };
-    }
-    return { error: "An unknown error occurred", status: "ERROR" };
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: message };
   }
 }
 
@@ -49,71 +42,61 @@ export async function getPost() {
   }
 }
 
-export async function createPost(body: Data) {
+export async function createPost({
+  title,
+  description,
+  image,
+}: {
+  title: string;
+  description: string;
+  image: string;
+}) {
   try {
     await dbConnect();
-    const newPost = new Post(body);
-    await newPost.save();
+    const newPost = new Post({ title, description, image }); // Ensure all fields are included
+    const savedPost = await newPost.save();
 
     revalidatePath("/");
-
-    const postObject = newPost.toObject();
-
-    return { ...postObject, _id: postObject._id.toString() };
+    return { data: savedPost };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        error: error.message || "Failed to create post",
-        status: "ERROR",
-      };
-    }
-    return {
-      error: "Failed to create post due to an unknown error",
-      status: "ERROR",
-    };
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: message };
   }
 }
 
 export async function updatePost({
+  description,
   title,
   image,
-  id,
+  _id,
 }: {
+  description: string;
   title: string;
   image: string;
-  id: string;
+  _id: string;
 }) {
   try {
     await dbConnect();
     const post = await Post.findByIdAndUpdate(
-      id,
-      { title, image },
+      _id,
+      { title, image, description },
       { new: true }
     ).exec();
 
     revalidatePath("/");
-
-    const postObject = post.toObject();
-
-    return { ...postObject, _id: postObject._id.toString() };
+    return { data: post };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        error: error.message || "Failed to update post",
-        status: "ERROR",
-      };
-    }
-    return {
-      error: "Failed to update post due to an unknown error",
-      status: "ERROR",
-    };
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: message };
   }
 }
 
-export async function deletePost(postId: string) {
+export async function deletePost({ _id }: { _id: string | number }) {
   try {
     await dbConnect();
-    const post = await Post.findByIdAndDelete(postId).exec();
+    const post = await Post.findByIdAndDelete(_id).exec();
 
     if (!post) {
       return {
@@ -124,18 +107,10 @@ export async function deletePost(postId: string) {
 
     revalidatePath("/");
 
-    const postObject = post.toObject();
-    return { ...postObject, _id: postObject._id.toString() };
+    return { data: post };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        error: error.message || "Failed to delete post",
-        status: "ERROR",
-      };
-    }
-    return {
-      error: "Failed to delete post due to an unknown error",
-      status: "ERROR",
-    };
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: message };
   }
 }
