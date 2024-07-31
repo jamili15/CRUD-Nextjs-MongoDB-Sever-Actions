@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface DataDocument extends Document {
-  _id: string | number;
+  _id: any;
   title: string;
   description: string;
   image: string;

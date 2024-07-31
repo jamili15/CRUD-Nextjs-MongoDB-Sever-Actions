@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useMyContext } from "@/context/Provider";
 import { deletePost } from "@/_actions/postActions";
 import { DataDocument } from "@/models/postModels";
+import { useRouter } from "next/navigation";
 
 interface PostCardProps {
   post: DataDocument;
@@ -13,6 +14,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { setEditPost } = useMyContext();
+  const router = useRouter();
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete?")) {
@@ -24,6 +26,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     post.image.startsWith("/") || post.image.startsWith("http")
       ? post.image
       : "/default-image.svg";
+
+  const editPost = router.push("/");
 
   return (
     <div className=" flex flex-col items-center">
@@ -44,7 +48,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       </div>
       <div className="flex gap-20 pt-3">
         <button
-          onClick={() => setEditPost(post)}
+          onClick={() => {
+            setEditPost(post);
+            editPost;
+          }}
           className="bg-green-200 px-4 rounded"
         >
           Edit
