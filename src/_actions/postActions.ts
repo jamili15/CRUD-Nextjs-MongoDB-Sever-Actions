@@ -6,8 +6,6 @@ import Post2 from "@/models/postModels";
 
 import { revalidatePath } from "next/cache";
 
-//getData with exec to get document  methods
-//This approach uses Mongoose’s .exec() method to execute the query.
 export async function getAllPosts() {
   try {
     await dbConnect();
@@ -43,39 +41,18 @@ export async function getOnePost({ _id }: { _id: string }) {
   }
 }
 
-// getData // This approach uses Mongoose’s .lean() method to get plain JavaScript objects from MongoDB.
-export async function getPost() {
-  try {
-    await dbConnect();
-    const posts = await Post2.find().lean();
-    return { posts };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        error: error.message || "Failed to fetct post!",
-        status: "ERROR",
-      };
-    }
-    return { error: "An unknown error occurred", status: "ERROR" };
-  }
-}
-
-export async function createPost({
-  title,
-  description,
-  image,
-}: {
+export async function createPost(formData: {
   title: string;
   description: string;
   image: string;
 }) {
   try {
     await dbConnect();
-    const newPost = new Post({ title, description, image }); // Ensure all fields are included
-    const savedPost = await newPost.save();
+    const newPost = new Post(formData);
+    await newPost.save();
 
     revalidatePath("/");
-    return { data: savedPost };
+    return { ...newPost._doc, _id: newPost.id.toString() };
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unknown error occurred";
@@ -103,7 +80,7 @@ export async function updatePost({
     ).exec();
 
     revalidatePath("/");
-    return { data: post };
+    return { ...post._doc, _id: post._id.toString() };
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unknown error occurred";
