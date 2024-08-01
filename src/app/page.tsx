@@ -1,19 +1,23 @@
 import { getAllPosts } from "@/_actions/postActions";
+import Feature from "@/components/Feature";
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
-import Image from "next/image";
+import React from "react";
 
-export default async function Home() {
-  const { posts, error } = await getAllPosts();
-  console.log("POST", posts);
+interface HomeProps {
+  params?: { [key: string]: any };
+  searchParams: URLSearchParams;
+}
+
+export default async function Home({ params, searchParams }: HomeProps) {
+  const { posts, error } = await getAllPosts(searchParams);
 
   return (
     <div className="flex flex-col gap-5">
       {error && <div style={{ color: "red" }}>Error: {error}</div>}
-      <h1>Next js Mongodb server _actions</h1>
-
+      <h1>Next.js MongoDB Server Actions</h1>
       <PostForm />
-
+      <Feature />
       {posts && <PostList posts={posts} />}
     </div>
   );

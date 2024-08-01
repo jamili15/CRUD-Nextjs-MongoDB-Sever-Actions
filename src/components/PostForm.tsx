@@ -9,10 +9,15 @@ const PostForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { editPost, setEditPost } = useMyContext();
 
-  const handleAction = async (formData: any) => {
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const image = formData.get("image");
+  const handleAction = async (formData: FormData) => {
+    const title = formData.get("title") as string | null;
+    const description = formData.get("description") as string | null;
+    const image = formData.get("image") as string | null;
+
+    if (!title || !description || !image) {
+      setError("All fields are required.");
+      return;
+    }
 
     try {
       if (editPost) {

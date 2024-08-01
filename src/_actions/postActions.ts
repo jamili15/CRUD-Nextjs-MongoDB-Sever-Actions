@@ -2,14 +2,25 @@
 
 import dbConnect from "@/db/dbConnect";
 import Post, { DataDocument } from "@/models/postModels";
-import Post2 from "@/models/postModels";
 
 import { revalidatePath } from "next/cache";
 
-export async function getAllPosts() {
+export async function getAllPosts(queryParams: any) {
+  const search = queryParams.search || "";
+  const sort = queryParams.sort || "createdAt";
   try {
     await dbConnect();
-    const posts: DataDocument[] = await Post.find().exec();
+
+    const query = search ? { title: { $regex: search, $options: "i" } } : {};
+
+    const sortObj: Record<string, 1 | -1> = {};
+    if (sort === "createdAt_asc") {
+      sortObj.createdAt = 1;
+    } else if (sort === "createdAt_desc") {
+      sortObj.createdAt = -1;
+    }
+
+    const posts: DataDocument[] = await Post.find(query).sort(sortObj).exec();
 
     const newData = posts.map((post: any) => ({
       ...post._doc,

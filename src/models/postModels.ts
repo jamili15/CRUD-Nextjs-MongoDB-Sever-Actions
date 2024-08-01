@@ -24,8 +24,7 @@ const postSchema: Schema = new mongoose.Schema(
   },
   {
     collection: `${process.env.mongodb_collection}`,
-    timestamps: false,
-    versionKey: false,
+    timestamps: true,
   }
 );
 
