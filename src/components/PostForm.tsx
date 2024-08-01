@@ -9,7 +9,7 @@ const PostForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { editPost, setEditPost } = useMyContext();
 
-  const handleAction = async (formData: FormData) => {
+  const handleAction = async (formData: Record<string, any>) => {
     const title = formData.get("title") as string | null;
     const description = formData.get("description") as string | null;
     const image = formData.get("image") as string | null;

@@ -52,11 +52,7 @@ export async function getOnePost({ _id }: { _id: string }) {
   }
 }
 
-export async function createPost(formData: {
-  title: string;
-  description: string;
-  image: string;
-}) {
+export async function createPost(formData: Record<string, any>) {
   try {
     await dbConnect();
     const newPost = new Post(formData);
@@ -71,27 +67,26 @@ export async function createPost(formData: {
   }
 }
 
-export async function updatePost({
-  description,
-  title,
-  image,
-  _id,
-}: {
-  description: string;
-  title: string;
-  image: string;
-  _id: string;
-}) {
+export async function updatePost(data: Record<string, any>) {
   try {
+    const { _id, ...updateData } = data;
+
+    if (!_id) {
+      throw new Error("Post ID is required for updating.");
+    }
+
     await dbConnect();
-    const post = await Post.findByIdAndUpdate(
-      _id,
-      { title, image, description },
-      { new: true }
-    ).exec();
+    const post = (await Post.findByIdAndUpdate(_id, updateData, {
+      new: true,
+      runValidators: true,
+    }).lean()) as { _id: string } | null;
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
 
     revalidatePath("/");
-    return { ...post._doc, _id: post._id.toString() };
+    return { ...post, _id: post._id.toString() };
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unknown error occurred";
