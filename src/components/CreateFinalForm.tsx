@@ -7,18 +7,15 @@ import Button from "@mui/material/Button";
 import { createPost, updatePost } from "@/_actions/postActions";
 import { useMyContext } from "@/context/Provider";
 
-interface FormValues {
-  title: string;
-  description: string;
-  image: string;
-}
-
 const PostForm: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { editPost, setEditPost } = useMyContext();
 
-  const onSubmit = async (formData: FormValues, form: any) => {
+  const onSubmit = async (
+    formData: Record<string, any>,
+    form: Record<string, any>
+  ) => {
     console.log("Form Data", formData);
 
     try {
@@ -38,8 +35,9 @@ const PostForm: React.FC = () => {
     }
   };
 
-  const validate = (values: FormValues) => {
-    const errors: Partial<FormValues> = {};
+  const validate = (values: Record<string, any>) => {
+    const errors: Partial<Record<string, any>> = {};
+
     if (!values.title) {
       errors.title = "Title is required";
     }
