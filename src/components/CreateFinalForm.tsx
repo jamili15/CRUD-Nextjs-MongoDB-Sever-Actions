@@ -55,7 +55,7 @@ const PostForm: React.FC = () => {
       onSubmit={onSubmit}
       validate={validate}
       initialValues={editPost}
-      render={({ handleSubmit, submitting, pristine, form }) => (
+      render={({ handleSubmit, submitting, pristine, form, values }) => (
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -128,6 +128,7 @@ const PostForm: React.FC = () => {
               Reset
             </Button>
           </div>
+          <pre>{JSON.stringify(values)}</pre>
           {status && <p className="text-green-500">{status}</p>}
           {error && <p className="text-red-500">{error}</p>}
         </form>
