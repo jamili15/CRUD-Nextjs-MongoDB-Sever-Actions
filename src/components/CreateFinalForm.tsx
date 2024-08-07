@@ -31,7 +31,7 @@ const PostForm: React.FC = () => {
       }
 
       setEditPost(null);
-      setError(null); // Clear error on successful submission
+      setError(null);
       form.restart();
     } catch (err) {
       setError(editPost ? "Failed to update post" : "Failed to create post");
@@ -56,7 +56,7 @@ const PostForm: React.FC = () => {
     <Form
       onSubmit={onSubmit}
       validate={validate}
-      initialValues={editPost || { title: "", description: "", image: "" }}
+      initialValues={editPost}
       render={({ handleSubmit, submitting, pristine, form }) => (
         <form
           onSubmit={(e) => {
