@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/_actions/postActions";
+import CreateFinalForm from "@/components/CreateFinalForm";
 import Feature from "@/components/Feature";
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
@@ -16,7 +17,8 @@ export default async function Home({ params, searchParams }: HomeProps) {
     <div className="flex flex-col gap-5">
       {error && <div style={{ color: "red" }}>Error: {error}</div>}
       <h1>Next.js MongoDB Server Actions</h1>
-      <PostForm />
+      {/* <PostForm /> */}
+      <CreateFinalForm />
       <Feature />
       {posts && <PostList posts={posts} />}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Field } from "react-final-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -14,12 +14,11 @@ interface FormValues {
 }
 
 const PostForm: React.FC = () => {
-  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { editPost, setEditPost } = useMyContext();
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = async (formData: FormValues, form: any) => {
     console.log("Form Data", formData);
 
     try {
@@ -32,9 +31,8 @@ const PostForm: React.FC = () => {
       }
 
       setEditPost(null);
-      if (formRef.current) {
-        formRef.current.reset();
-      }
+      setError(null); // Clear error on successful submission
+      form.restart();
     } catch (err) {
       setError(editPost ? "Failed to update post" : "Failed to create post");
     }
@@ -61,8 +59,16 @@ const PostForm: React.FC = () => {
       initialValues={editPost || { title: "", description: "", image: "" }}
       render={({ handleSubmit, submitting, pristine, form }) => (
         <form
-          onSubmit={handleSubmit}
-          ref={formRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (handleSubmit) {
+              handleSubmit(e)?.then(() => {
+                if (form) {
+                  form.reset();
+                }
+              });
+            }
+          }}
           className="flex flex-col gap-2 pl-2 items-center"
         >
           <Field name="title">
