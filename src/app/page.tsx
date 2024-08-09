@@ -1,9 +1,11 @@
 import { getAllPosts } from "@/_actions/postActions";
 import CreateFinalForm from "@/components/CreateFinalForm";
 import Feature from "@/components/Feature";
+import Loading from "@/components/Loading";
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
-import React from "react";
+import { resolve } from "path";
+import React, { Suspense } from "react";
 
 interface HomeProps {
   params?: { [key: string]: any };
@@ -14,13 +16,17 @@ export default async function Home({ params, searchParams }: HomeProps) {
   const { posts, error } = await getAllPosts(searchParams);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 text-center">
       {error && <div style={{ color: "red" }}>Error: {error}</div>}
       <h1>Next.js MongoDB Server Actions</h1>
       {/* <PostForm /> */}
       <CreateFinalForm />
       <Feature />
-      {posts && <PostList posts={posts} />}
+      {posts && (
+        <Suspense fallback={<Loading />}>
+          <PostList posts={posts} />
+        </Suspense>
+      )}
     </div>
   );
 }

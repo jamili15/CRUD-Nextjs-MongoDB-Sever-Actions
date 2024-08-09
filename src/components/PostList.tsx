@@ -6,7 +6,8 @@ interface PostProps {
   posts: DataDocument[];
 }
 
-const PostList: React.FC<PostProps> = ({ posts }) => {
+const PostList: React.FC<PostProps> = async ({ posts }) => {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
   return (
     <div className="flex gap-20 flex-wrap">
       {posts.map((post: any) => (
