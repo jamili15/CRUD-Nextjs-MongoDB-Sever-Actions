@@ -108,7 +108,7 @@ export async function deletePost({ _id }: { _id: string | number }) {
 
     revalidatePath("/");
 
-    return { data: post };
+    return { postId: post._id.toString() };
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unknown error occurred";
