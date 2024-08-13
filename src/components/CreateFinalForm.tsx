@@ -13,17 +13,17 @@ const PostForm: React.FC = () => {
   const { editPost, setEditPost } = useMyContext();
 
   const onSubmit = async (
-    formData: Record<string, any>,
+    formValues: Record<string, any>,
     form: Record<string, any>
   ) => {
-    console.log("Form Data", formData);
+    console.log("Form Data", formValues);
 
     try {
       if (editPost) {
-        await updatePost({ ...formData, _id: editPost._id });
+        await updatePost({ ...formValues, _id: editPost._id });
         setStatus("Post updated successfully");
       } else {
-        await createPost(formData);
+        await createPost(formValues);
         setStatus("Post created successfully");
       }
 
