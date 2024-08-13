@@ -2,7 +2,7 @@
 
 import dbConnect from "@/db/dbConnect";
 import Post, { DataDocument } from "@/models/postModels";
-
+import Crendentials from "@/models/crendentialsModel";
 import { revalidatePath } from "next/cache";
 
 export async function getAllPosts(queryParams: any) {

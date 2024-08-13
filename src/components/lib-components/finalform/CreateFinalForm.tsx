@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Form, Field } from "react-final-form";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createPost, updatePost } from "@/_actions/postActions";
 import { useMyContext } from "@/context/Provider";
+import Form from "./Form";
+import InputText from "../materialui/InputText";
 
 const PostForm: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -55,62 +57,16 @@ const PostForm: React.FC = () => {
       onSubmit={onSubmit}
       validate={validate}
       initialValues={editPost}
-      render={({ handleSubmit, submitting, pristine, form, values }) => (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (handleSubmit) {
-              handleSubmit(e)?.then(() => {
-                if (form) {
-                  form.reset();
-                }
-              });
-            }
-          }}
-          className="flex flex-col gap-2 pl-2 items-center"
-        >
-          <Field name="title">
-            {({ input, meta }) => (
-              <div>
-                <TextField
-                  {...input}
-                  label="Title"
-                  variant="outlined"
-                  error={meta.touched && meta.error ? true : false}
-                  helperText={meta.touched && meta.error ? meta.error : ""}
-                  fullWidth
-                />
-              </div>
-            )}
-          </Field>
-          <Field name="description">
-            {({ input, meta }) => (
-              <div>
-                <TextField
-                  {...input}
-                  label="Description"
-                  variant="outlined"
-                  error={meta.touched && meta.error ? true : false}
-                  helperText={meta.touched && meta.error ? meta.error : ""}
-                  fullWidth
-                />
-              </div>
-            )}
-          </Field>
-          <Field name="image">
-            {({ input, meta }) => (
-              <div>
-                <TextField
-                  {...input}
-                  label="Image"
-                  variant="outlined"
-                  error={meta.touched && meta.error ? true : false}
-                  helperText={meta.touched && meta.error ? meta.error : ""}
-                  fullWidth
-                />
-              </div>
-            )}
-          </Field>
+      render={({ submitting, pristine, form, values }) => (
+        <>
+          <InputText name="title" label="Title" variant="outlined" />
+          <InputText
+            name="description"
+            label="Description"
+            variant="outlined"
+          />
+          <InputText name="image" label="Image" variant="outlined" />
+
           <div className="flex gap-2 mt-4">
             <Button
               variant="contained"
@@ -131,7 +87,7 @@ const PostForm: React.FC = () => {
           <pre>{JSON.stringify(values)}</pre>
           {status && <p className="text-green-500">{status}</p>}
           {error && <p className="text-red-500">{error}</p>}
-        </form>
+        </>
       )}
     />
   );

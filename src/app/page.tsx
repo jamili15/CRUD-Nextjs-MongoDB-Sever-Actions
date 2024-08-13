@@ -1,5 +1,5 @@
 import { getAllPosts } from "@/_actions/postActions";
-import CreateFinalForm from "@/components/CreateFinalForm";
+import CreateFinalForm from "@/components/lib-components/finalform/CreateFinalForm";
 import Feature from "@/components/Feature";
 import Loading from "@/components/Loading";
 import PostForm from "@/components/PostForm";
