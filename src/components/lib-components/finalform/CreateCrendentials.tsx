@@ -17,14 +17,6 @@ const CreateCrendentials = () => {
   };
 
   const initialValues = {
-    firstname: "",
-    lastname: "",
-    age: "",
-    account: {
-      username: "",
-      email: "",
-      password: "",
-    },
     colors: [{}, {}],
   };
 
