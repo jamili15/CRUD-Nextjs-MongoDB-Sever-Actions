@@ -60,21 +60,21 @@ const ArrayText: React.FC<ArrayTextProps> = ({
         validateFields={validateFields}
       >
         {({ input, meta }) => {
-          const handleChange = (
-            index: number | string | any,
-            value: string
-          ) => {
-            const updatedValues = [...input.value];
+          // Initialize the array if it's undefined
+          const values = input.value || valueKeys.map(() => "");
+
+          const handleChange = (index: number, value: string) => {
+            const updatedValues = [...values];
             updatedValues[index] = value;
             input.onChange(updatedValues);
           };
 
           return (
             <div>
-              {valueKeys.map((index, key) => (
+              {valueKeys.map((key, index) => (
                 <TextField
-                  key={index}
-                  value={input.value[index] || ""}
+                  key={key}
+                  value={values[index] || ""}
                   onChange={(e) => handleChange(index, e.target.value)}
                   type={type}
                   placeholder={placeholder}

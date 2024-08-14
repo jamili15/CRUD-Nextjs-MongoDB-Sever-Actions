@@ -11,6 +11,7 @@ export interface DataDocument extends Document {
     password?: string;
   };
   colors?: { [key: string]: string }[]; // Use plain objects
+  favoriteFoods?: Record<string, any>;
 }
 
 // Define the schema
@@ -47,6 +48,7 @@ const crendentialsSchema: Schema = new mongoose.Schema(
         type: Schema.Types.Mixed, // Use Schema.Types.Mixed for flexible objects
       },
     ],
+    favoriteFoods: [],
   },
   {
     collection: `${process.env.mongodb_collection}`,

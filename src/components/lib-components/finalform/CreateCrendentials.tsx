@@ -18,15 +18,9 @@ const CreateCrendentials = () => {
     console.log("FormValues", JSON.stringify(formValues, null, 2));
   };
 
-  const initialValues = {
-    colors: [{}, {}],
-    favoriteFoods: [],
-  };
-
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={initialValues}
       render={({ submitting, pristine, form, values }) => (
         <>
           <InputText name="firstname" label="First Name" variant="outlined" />
@@ -43,11 +37,17 @@ const CreateCrendentials = () => {
           />
           <ArrayObjText
             name="colors"
-            valueKeys={["red", "blue", "green"]}
+            valueKeys={[
+              ["yellow", "pink", "black"],
+              ["yellow", "pink", "black"],
+            ]}
             labels={{
               red: "Red",
               blue: "Blue",
               green: "Green",
+              yellow: "Yellow",
+              pink: "Pink",
+              black: "Black",
             }}
           />
           <ArrayField

@@ -5,7 +5,7 @@ import { Field } from "react-final-form";
 interface ArrayObjTextProps {
   className?: string;
   name: string;
-  valueKeys: string[];
+  valueKeys: string[][];
   labels?: Record<string, string>;
   validate?: (value: any) => undefined | string | Promise<any>;
   validateFields?: string[];
@@ -26,7 +26,7 @@ interface ArrayObjTextProps {
   error?: boolean;
 }
 
-const ArrayObText: React.FC<ArrayObjTextProps> = ({
+const ArrayObjText: React.FC<ArrayObjTextProps> = ({
   className,
   name,
   valueKeys,
@@ -59,17 +59,18 @@ const ArrayObText: React.FC<ArrayObjTextProps> = ({
       validateFields={validateFields}
     >
       {({ input, meta }) => {
-        // Ensure input.value is an array of plain objects
-        const valueArray = Array.isArray(input.value) ? input.value : [];
+        const valueArray = Array.isArray(input.value)
+          ? input.value
+          : valueKeys.map(() => ({}));
 
         const handleChange = (
-          index: number,
+          groupIndex: number,
           key: string,
           value: string | number
         ) => {
           const updatedArray = [...valueArray];
-          updatedArray[index] = {
-            ...updatedArray[index],
+          updatedArray[groupIndex] = {
+            ...updatedArray[groupIndex],
             [key]: value,
           };
           input.onChange(updatedArray);
@@ -77,13 +78,15 @@ const ArrayObText: React.FC<ArrayObjTextProps> = ({
 
         return (
           <div>
-            {valueArray.map((obj, index) => (
-              <div key={index}>
-                {valueKeys.map((key) => (
+            {valueKeys.map((group, groupIndex) => (
+              <div key={groupIndex} style={{ marginBottom: "20px" }}>
+                {group.map((key) => (
                   <TextField
-                    key={`${index}-${key}`}
-                    value={obj[key] || ""}
-                    onChange={(e) => handleChange(index, key, e.target.value)}
+                    key={`${groupIndex}-${key}`}
+                    value={valueArray[groupIndex]?.[key] || ""}
+                    onChange={(e) =>
+                      handleChange(groupIndex, key, e.target.value)
+                    }
                     type={type}
                     placeholder={placeholder}
                     fullWidth={fullWidth}
@@ -114,4 +117,4 @@ const ArrayObText: React.FC<ArrayObjTextProps> = ({
   );
 };
 
-export default ArrayObText;
+export default ArrayObjText;
