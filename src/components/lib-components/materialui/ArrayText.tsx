@@ -50,67 +50,58 @@ const ArrayText: React.FC<ArrayTextProps> = ({
   error,
 }) => {
   return (
-    <Field
-      name={name}
-      validate={validate}
-      format={format}
-      parse={parse}
-      initialValue={initialValue}
-      validateFields={validateFields}
-    >
-      {({ input, meta }) => {
-        // Ensure input.value is an array of plain objects
-        const valueArray = Array.isArray(input.value) ? input.value : [];
-
-        const handleChange = (
-          index: number,
-          key: string,
-          value: string | number
-        ) => {
-          const updatedArray = [...valueArray];
-          updatedArray[index] = {
-            ...updatedArray[index],
-            [key]: value,
+    <div>
+      <Field
+        name={name}
+        validate={validate}
+        format={format}
+        parse={parse}
+        initialValue={initialValue}
+        validateFields={validateFields}
+      >
+        {({ input, meta }) => {
+          const handleChange = (
+            index: number | string | any,
+            value: string
+          ) => {
+            const updatedValues = [...input.value];
+            updatedValues[index] = value;
+            input.onChange(updatedValues);
           };
-          input.onChange(updatedArray);
-        };
 
-        return (
-          <div>
-            {valueArray.map((obj, index) => (
-              <div key={index}>
-                {valueKeys.map((key) => (
-                  <TextField
-                    key={`${index}-${key}`}
-                    value={obj[key] || ""}
-                    onChange={(e) => handleChange(index, key, e.target.value)}
-                    type={type}
-                    placeholder={placeholder}
-                    fullWidth={fullWidth}
-                    margin={margin}
-                    variant={variant}
-                    rows={rows}
-                    multiline={multiline}
-                    select={select}
-                    InputProps={InputProps}
-                    inputProps={inputProps}
-                    helperText={
-                      meta.touched && meta.error ? meta.error : helperText
-                    }
-                    error={meta.touched && (meta.error || error)}
-                    className={className}
-                    label={labels[key] || key}
-                  />
-                ))}
-              </div>
-            ))}
-            {meta.touched && meta.error && (
-              <span style={{ color: "red" }}>{meta.error}</span>
-            )}
-          </div>
-        );
-      }}
-    </Field>
+          return (
+            <div>
+              {valueKeys.map((index, key) => (
+                <TextField
+                  key={index}
+                  value={input.value[index] || ""}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  type={type}
+                  placeholder={placeholder}
+                  fullWidth={fullWidth}
+                  margin={margin}
+                  variant={variant}
+                  rows={rows}
+                  multiline={multiline}
+                  select={select}
+                  InputProps={InputProps}
+                  inputProps={inputProps}
+                  helperText={
+                    meta.touched && meta.error ? meta.error : helperText
+                  }
+                  error={meta.touched && (meta.error || error)}
+                  className={className}
+                  label={labels[key] || key}
+                />
+              ))}
+              {meta.touched && meta.error && (
+                <span style={{ color: "red" }}>{meta.error}</span>
+              )}
+            </div>
+          );
+        }}
+      </Field>
+    </div>
   );
 };
 

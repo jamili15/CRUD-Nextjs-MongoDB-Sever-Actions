@@ -5,7 +5,8 @@ import { createPost } from "@/_actions/postActions";
 import Form from "./Form";
 import InputText from "../materialui/InputText";
 import ObjText from "../materialui/ObjText";
-import ArrayText from "../materialui/ArrayText";
+import ArrayObjText from "../materialui/ArrayObjText";
+import ArrayField from "../materialui/ArrayText";
 
 const CreateCrendentials = () => {
   const onSubmit = async (
@@ -13,11 +14,13 @@ const CreateCrendentials = () => {
     form: Record<string, any>
   ) => {
     await createPost(formValues);
+    window.alert(JSON.stringify(formValues, null, 2));
     console.log("FormValues", JSON.stringify(formValues, null, 2));
   };
 
   const initialValues = {
     colors: [{}, {}],
+    favoriteFoods: [],
   };
 
   return (
@@ -38,7 +41,7 @@ const CreateCrendentials = () => {
               password: "Password",
             }}
           />
-          <ArrayText
+          <ArrayObjText
             name="colors"
             valueKeys={["red", "blue", "green"]}
             labels={{
@@ -46,6 +49,11 @@ const CreateCrendentials = () => {
               blue: "Blue",
               green: "Green",
             }}
+          />
+          <ArrayField
+            name="favoriteFoods"
+            valueKeys={["0", "1", "2"]}
+            labels={{ 0: "crab", 1: "hotdog", 2: "chicken" }}
           />
           <pre>{JSON.stringify(values, null, 2)}</pre>
           <button type="submit">Submit</button>
