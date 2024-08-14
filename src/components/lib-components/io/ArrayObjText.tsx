@@ -1,33 +1,23 @@
-import TextField from "@mui/material/TextField";
-import React from "react";
 import { Field } from "react-final-form";
+import MuiTextField, {
+  TextFieldProps as MuiTextFieldProps,
+} from "@mui/material/TextField";
 
-interface ArrayObjTextProps {
-  className?: string;
+interface ArrayObjTextProps
+  extends Omit<
+    MuiTextFieldProps,
+    "name" | "value" | "onChange" | "helperText" | "error"
+  > {
   name: string;
   valueKeys: string[][];
   labels?: Record<string, string>;
   validate?: (value: any) => undefined | string | Promise<any>;
-  validateFields?: string[];
   format?: (value: any) => any;
   parse?: (value: any) => any;
   initialValue?: any;
-  type?: string;
-  placeholder?: string;
-  fullWidth?: boolean;
-  margin?: "none" | "dense" | "normal";
-  variant?: "standard" | "outlined" | "filled";
-  rows?: number;
-  multiline?: boolean;
-  select?: boolean;
-  InputProps?: object;
-  inputProps?: object;
-  helperText?: string;
-  error?: boolean;
 }
 
 const ArrayObjText: React.FC<ArrayObjTextProps> = ({
-  className,
   name,
   valueKeys,
   labels = {},
@@ -35,19 +25,7 @@ const ArrayObjText: React.FC<ArrayObjTextProps> = ({
   format,
   parse,
   initialValue,
-  validateFields,
-  type,
-  placeholder,
-  fullWidth,
-  margin,
-  variant,
-  rows,
-  multiline,
-  select,
-  inputProps,
-  InputProps,
-  helperText,
-  error,
+  ...restProps
 }) => {
   return (
     <Field
@@ -56,7 +34,6 @@ const ArrayObjText: React.FC<ArrayObjTextProps> = ({
       format={format}
       parse={parse}
       initialValue={initialValue}
-      validateFields={validateFields}
     >
       {({ input, meta }) => {
         const valueArray = Array.isArray(input.value)
@@ -81,28 +58,16 @@ const ArrayObjText: React.FC<ArrayObjTextProps> = ({
             {valueKeys.map((group, groupIndex) => (
               <div key={groupIndex} style={{ marginBottom: "20px" }}>
                 {group.map((key) => (
-                  <TextField
+                  <MuiTextField
                     key={`${groupIndex}-${key}`}
                     value={valueArray[groupIndex]?.[key] || ""}
                     onChange={(e) =>
                       handleChange(groupIndex, key, e.target.value)
                     }
-                    type={type}
-                    placeholder={placeholder}
-                    fullWidth={fullWidth}
-                    margin={margin}
-                    variant={variant}
-                    rows={rows}
-                    multiline={multiline}
-                    select={select}
-                    InputProps={InputProps}
-                    inputProps={inputProps}
-                    helperText={
-                      meta.touched && meta.error ? meta.error : helperText
-                    }
-                    error={meta.touched && (meta.error || error)}
-                    className={className}
+                    error={meta.touched && !!meta.error}
+                    helperText={meta.touched && meta.error}
                     label={labels[key] || key}
+                    {...restProps}
                   />
                 ))}
               </div>

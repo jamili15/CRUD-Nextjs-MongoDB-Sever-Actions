@@ -6,8 +6,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createPost, updatePost } from "@/_actions/postActions";
 import { useMyContext } from "@/context/Provider";
-import Form from "./Form";
-import InputText from "../materialui/InputText";
+import Form from "../io/Form";
+import { Text } from "@/components/lib-components/io/Text";
 
 const PostForm: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -59,13 +59,9 @@ const PostForm: React.FC = () => {
       initialValues={editPost}
       render={({ submitting, pristine, form, values }) => (
         <>
-          <InputText name="title" label="Title" variant="outlined" />
-          <InputText
-            name="description"
-            label="Description"
-            variant="outlined"
-          />
-          <InputText name="image" label="Image" variant="outlined" />
+          <Text name="title" label="Title" variant="outlined" />
+          <Text name="description" label="Description" variant="outlined" />
+          <Text name="image" label="Image" variant="outlined" />
 
           <div className="flex gap-2 mt-4">
             <Button

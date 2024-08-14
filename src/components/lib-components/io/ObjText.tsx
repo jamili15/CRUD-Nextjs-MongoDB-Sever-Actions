@@ -1,33 +1,24 @@
-import TextField from "@mui/material/TextField";
+import MuiTextField, {
+  TextFieldProps as MuiTextFieldProps,
+} from "@mui/material/TextField";
 import React from "react";
 import { Field } from "react-final-form";
 
-interface ObjTextProps {
-  className?: string;
+interface ObjTextProps
+  extends Omit<
+    MuiTextFieldProps,
+    "name" | "value" | "onChange" | "helperText" | "error"
+  > {
   name: string;
-  valueKeys: string[] | number[];
+  valueKeys: string[];
   labels?: Record<string, string>;
   validate?: (value: any) => undefined | string | Promise<any>;
-  validateFields?: string[];
   format?: (value: any) => any;
   parse?: (value: any) => any;
   initialValue?: any;
-  type?: string;
-  placeholder?: string;
-  fullWidth?: boolean;
-  margin?: "none" | "dense" | "normal";
-  variant?: "standard" | "outlined" | "filled";
-  rows?: number;
-  multiline?: boolean;
-  select?: boolean;
-  InputProps?: object;
-  inputProps?: object;
-  helperText?: string;
-  error?: boolean;
 }
 
 function ObjText({
-  className,
   name,
   valueKeys,
   labels = {},
@@ -35,19 +26,7 @@ function ObjText({
   format,
   parse,
   initialValue,
-  validateFields,
-  type,
-  placeholder,
-  fullWidth,
-  margin,
-  variant,
-  rows,
-  multiline,
-  select,
-  inputProps,
-  InputProps,
-  helperText,
-  error,
+  ...restProps
 }: ObjTextProps) {
   return (
     <Field
@@ -56,7 +35,6 @@ function ObjText({
       format={format}
       parse={parse}
       initialValue={initialValue}
-      validateFields={validateFields}
     >
       {({ input, meta }) => {
         const initialValues = [].reduce((acc, key) => {
@@ -74,26 +52,14 @@ function ObjText({
         return (
           <>
             {valueKeys.map((key, index) => (
-              <TextField
+              <MuiTextField
                 key={index}
                 value={val[key] || ""}
-                type={type}
-                placeholder={placeholder}
-                fullWidth={fullWidth}
-                margin={margin}
-                variant={variant}
-                rows={rows}
-                multiline={multiline}
-                select={select}
-                InputProps={InputProps}
-                inputProps={inputProps}
-                helperText={
-                  meta.touched && meta.error ? meta.error : helperText
-                }
-                error={meta.touched && (meta.error || error)}
-                className={className}
                 onChange={(e) => handleChange(key, e.target.value)}
+                error={meta.touched && !!meta.error}
+                helperText={meta.touched && meta.error}
                 label={labels[key] || key}
+                {...restProps}
               />
             ))}
             {meta.touched && meta.error && (

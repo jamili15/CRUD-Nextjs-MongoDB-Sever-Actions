@@ -2,11 +2,12 @@
 
 import React from "react";
 import { createPost } from "@/_actions/postActions";
-import Form from "./Form";
-import InputText from "../materialui/InputText";
-import ObjText from "../materialui/ObjText";
-import ArrayObjText from "../materialui/ArrayObjText";
-import ArrayField from "../materialui/ArrayText";
+import Form from "../io/Form";
+
+import ObjText from "../io/ObjText";
+import ArrayObjText from "../io/ArrayObjText";
+import ArrayField from "../io/ArrayText";
+import { Text } from "@/components/lib-components/io/Text";
 
 const CreateCrendentials = () => {
   const onSubmit = async (
@@ -23,9 +24,9 @@ const CreateCrendentials = () => {
       onSubmit={onSubmit}
       render={({ submitting, pristine, form, values }) => (
         <>
-          <InputText name="firstname" label="First Name" variant="outlined" />
-          <InputText name="lastname" label="Last Name" variant="outlined" />
-          <InputText name="age" label="Age" variant="outlined" />
+          <Text name="firstname" label="First Name" variant="outlined" />
+          <Text name="lastname" label="Last Name" variant="outlined" />
+          <Text name="age" label="Age" variant="outlined" />
           <ObjText
             name="account"
             valueKeys={["username", "email", "password"]}
@@ -50,11 +51,13 @@ const CreateCrendentials = () => {
               black: "Black",
             }}
           />
+
           <ArrayField
             name="favoriteFoods"
             valueKeys={["0", "1", "2"]}
             labels={{ 0: "crab", 1: "hotdog", 2: "chicken" }}
           />
+
           <pre>{JSON.stringify(values, null, 2)}</pre>
           <button type="submit">Submit</button>
         </>
