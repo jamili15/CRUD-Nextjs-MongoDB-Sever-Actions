@@ -29,9 +29,7 @@ export async function getAllPosts(queryParams: any) {
 
     return { posts: newData };
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return { error: message };
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -46,9 +44,7 @@ export async function getOnePost({ _id }: { _id: string }) {
       },
     };
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return { error: message };
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -61,9 +57,7 @@ export async function createPost(formData: Record<string, any>) {
     revalidatePath("/");
     return { ...newPost._doc, _id: newPost.id.toString() };
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return { error: message };
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -88,9 +82,7 @@ export async function updatePost(data: Record<string, any>) {
     revalidatePath("/");
     return { ...post, _id: post._id.toString() };
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return { error: message };
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -110,8 +102,6 @@ export async function deletePost({ _id }: { _id: string | number }) {
 
     return { postId: post._id.toString() };
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return { error: message };
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 }
