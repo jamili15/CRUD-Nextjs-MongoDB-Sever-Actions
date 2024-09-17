@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/_actions/postActions";
 import CreateFinalForm from "@/components/lib-components/finalform/CreateFinalForm";
 import Feature from "@/components/Feature";
-import Loading from "@/components/Loading";
+import Loading from "@/app/Loading";
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
 import { resolve } from "path";
