@@ -48,10 +48,23 @@ export async function getOnePost({ _id }: { _id: string }) {
   }
 }
 
-export async function createPost(formData: Record<string, any>) {
+export async function createFormData(formData: Record<string, any>) {
   try {
     await dbConnect();
     const newPost = new Post(formData);
+    await newPost.save();
+
+    revalidatePath("/");
+    return { ...newPost._doc, _id: newPost.id.toString() };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+export async function createPost(formValues: Record<string, any>) {
+  try {
+    await dbConnect();
+    const newPost = new Post(formValues);
     await newPost.save();
 
     revalidatePath("/");

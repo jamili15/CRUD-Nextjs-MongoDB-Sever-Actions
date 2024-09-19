@@ -1,5 +1,5 @@
 "use client";
-import { createPost, updatePost } from "@/_actions/postActions";
+import { createFormData, createPost, updatePost } from "@/_actions/postActions";
 import React, { useRef, useState } from "react";
 import { useMyContext } from "@/context/Provider";
 
@@ -24,7 +24,7 @@ const PostForm: React.FC = () => {
         await updatePost({ title, description, image, _id: editPost._id });
         setStatus("Post updated successfully");
       } else {
-        await createPost({ title, description, image });
+        await createFormData({ title, description, image });
         setStatus("Post created successfully");
       }
 
