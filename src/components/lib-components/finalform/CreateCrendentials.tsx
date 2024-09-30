@@ -6,8 +6,8 @@ import Form from "../io/Form";
 
 import ObjText from "../io/ObjText";
 import ArrayObjText from "../io/ArrayObjText";
-import ArrayField from "../io/ArrayText";
 import { Text } from "@/components/lib-components/io/Text";
+import ArrayText from "../io/ArrayText";
 
 const CreateCrendentials = () => {
   const onSubmit = async (
@@ -52,7 +52,7 @@ const CreateCrendentials = () => {
             }}
           />
 
-          <ArrayField
+          <ArrayText
             name="favoriteFoods"
             valueKeys={["0", "1", "2"]}
             labels={{ 0: "crab", 1: "hotdog", 2: "chicken" }}
