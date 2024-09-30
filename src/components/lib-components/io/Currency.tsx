@@ -1,140 +1,50 @@
-import * as React from "react";
-import { Field } from "react-final-form";
-import MuiFormControl from "@mui/material/FormControl";
-import MuiInputLabel from "@mui/material/InputLabel";
-import MuiOutlinedInput, {
-  OutlinedInputProps as MuiOutlinedInputProps,
-} from "@mui/material/OutlinedInput";
-import MuiFilledInput, {
-  FilledInputProps as MuiFilledInputProps,
-} from "@mui/material/FilledInput";
-import MuiFormHelperText from "@mui/material/FormHelperText";
-import { NumericFormat } from "react-number-format";
+import React from "react";
 
-const CurrencyFormat = React.forwardRef((props: any, ref) => {
-  const {
-    onChange,
-    onFocus,
-    onBlur,
-    value,
-    allowNegative,
-    thousandSeparator,
-    decimalScale,
-    prefix,
-    suffix,
-    textAlign,
-  } = props;
-  return (
-    <NumericFormat
-      getInputRef={ref}
-      defaultValue={value}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: +values.value,
-          },
-        });
-      }}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      valueIsNumericString={false}
-      allowNegative={allowNegative}
-      thousandSeparator={thousandSeparator}
-      prefix={prefix}
-      suffix={suffix}
-      decimalScale={decimalScale}
-      fixedDecimalScale={true}
-      style={{
-        textAlign: textAlign,
-        width: "100%",
-        border: "none",
-        outline: "none",
-        height: "55px",
-        zIndex: -1,
-        paddingLeft: 12,
-        paddingRight: 12,
-      }}
-    />
-  );
-});
-
-type CurrencyProps = {
-  name: string;
+interface CurrencyComponentProps {
+  amount: number | string;
+  currency?: string;
   caption?: string;
-  captionLayout?: string;
-  minWidth?: number;
-  decimalScale?: number;
-  allowNegative?: boolean;
-  thousandSeparator?: boolean;
-  prefix?: string;
-  suffix?: string;
-  variant?: "filled" | "outlined" | "standard";
-  textAlign?: "left" | "right" | "center";
-  validate?: (value: any) => undefined | string;
-} & MuiOutlinedInputProps &
-  MuiFilledInputProps;
+  className?: string;
+  decimal?: number;
+}
 
-export const Currency: React.FC<CurrencyProps> = ({
-  name,
+const Currency: React.FC<CurrencyComponentProps> = ({
+  amount,
+  currency,
   caption,
-  captionLayout,
-  validate,
-  allowNegative = false,
-  thousandSeparator = true,
-  decimalScale = 2,
-  textAlign = "center",
-  variant = "outlined",
-  prefix = undefined,
-  suffix = undefined,
-  ...restProps
+  className,
+  decimal = 2,
 }) => {
-  let BgColor = "";
-  let FieldComponent = MuiOutlinedInput;
-  if (variant === "filled") {
-    FieldComponent = MuiFilledInput;
-    BgColor = " !bg-transparent";
-  }
+  const formattedAmount = () => {
+    const numericAmount =
+      typeof amount === "string" ? parseFloat(amount) : amount;
+
+    if (isNaN(numericAmount)) {
+      return "Invalid Amount";
+    }
+
+    const options: Intl.NumberFormatOptions = {
+      style: currency ? "currency" : "decimal",
+      currency: currency === "Php" || currency === "USD" ? currency : undefined,
+      minimumFractionDigits: decimal,
+      maximumFractionDigits: decimal,
+    };
+
+    const formattedValue = numericAmount.toLocaleString(undefined, options);
+
+    return formattedValue;
+  };
+
   return (
-    <Field name={name} validate={validate}>
-      {(props) => {
-        return (
-          <MuiFormControl className="mt-4">
-            <MuiInputLabel
-              htmlFor="my-input"
-              className={`bg-white px-1 ${captionLayout} ${BgColor}`}
-              variant={variant}
-            >
-              {caption}
-            </MuiInputLabel>
-            <FieldComponent
-              id="my-input"
-              aria-describedby="my-helper-text"
-              components={{ Input: CurrencyFormat }}
-              slotProps={{
-                input: {
-                  allowNegative: allowNegative,
-                  thousandSeparator: thousandSeparator,
-                  decimalScale: decimalScale,
-                  prefix: prefix,
-                  suffix: suffix,
-                  textAlign: textAlign,
-                  onChange: props.input.onChange,
-                },
-              }}
-              {...restProps}
-              {...props.input}
-            />
-            {props.meta.touched && props.meta.error && (
-              <MuiFormHelperText
-                error={props.meta.touched && !!props.meta.error}
-              >
-                {props.meta.error}
-              </MuiFormHelperText>
-            )}
-          </MuiFormControl>
-        );
-      }}
-    </Field>
+    <>
+      {caption && (
+        <span className={`pr-5 uppercase font-bold ${className}`}>
+          {caption} :
+        </span>
+      )}
+      <div className={`${className}`}>{formattedAmount()}</div>
+    </>
   );
 };
+
+export default Currency;
