@@ -23,7 +23,7 @@ const postSchema: Schema = new mongoose.Schema(
     },
   },
   {
-    collection: `${process.env.mongodb_collection}`,
+    collection: "post",
     timestamps: true,
   }
 );

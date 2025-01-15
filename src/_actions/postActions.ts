@@ -4,13 +4,17 @@ import dbConnect from "@/db/dbConnect";
 import Post, { DataDocument } from "@/models/postModels";
 import Crendentials from "@/models/crendentialsModel";
 import { revalidatePath } from "next/cache";
+import mongoose from "mongoose";
 
 export async function getAllPosts(queryParams: any) {
   const search = queryParams.search || "";
   const sort = queryParams.sort || "createdAt";
   try {
     await dbConnect();
-
+    
+    const db = mongoose.connection.useDb("server_actions")
+    const collection = db.model("Post", Post.schema);
+    
     const query = search ? { title: { $regex: search, $options: "i" } } : {};
 
     const sortObj: Record<string, 1 | -1> = {};
@@ -20,7 +24,7 @@ export async function getAllPosts(queryParams: any) {
       sortObj.createdAt = -1;
     }
 
-    const posts: DataDocument[] = await Post.find(query).sort(sortObj).exec();
+    const posts = await collection.find(query).sort(sortObj).exec();
 
     const newData = posts.map((post: any) => ({
       ...post._doc,
@@ -34,13 +38,16 @@ export async function getAllPosts(queryParams: any) {
 }
 
 export async function getOnePost({ _id }: { _id: string }) {
+
+  const db = mongoose.connection.useDb("server_actions")
+  const collection = db.model("Post", Post.schema);
   try {
     await dbConnect();
-    const post = await Post.findById(_id).exec();
+    const post = await collection.findById(_id).exec();
     return {
       post: {
         ...post?.toObject(),
-        _id: post?._id.toString(),
+        _id: (post?._id as mongoose.Types.ObjectId).toString(),
       },
     };
   } catch (error: unknown) {
@@ -75,6 +82,9 @@ export async function createPost(formValues: Record<string, any>) {
 }
 
 export async function updatePost(data: Record<string, any>) {
+  const db = mongoose.connection.useDb("server_actions")
+  const collection = db.model("Post", Post.schema);
+  
   try {
     const { _id, ...updateData } = data;
 
@@ -83,7 +93,7 @@ export async function updatePost(data: Record<string, any>) {
     }
 
     await dbConnect();
-    const post = (await Post.findByIdAndUpdate(_id, updateData, {
+    const post = (await collection.findByIdAndUpdate(_id, updateData, {
       new: true,
       runValidators: true,
     }).lean()) as { _id: string } | null;
@@ -100,9 +110,11 @@ export async function updatePost(data: Record<string, any>) {
 }
 
 export async function deletePost({ _id }: { _id: string | number }) {
+  const db = mongoose.connection.useDb("server_actions")
+  const collection = db.model("Post", Post.schema);
   try {
     await dbConnect();
-    const post = await Post.findByIdAndDelete(_id).exec();
+    const post = await collection.findByIdAndDelete(_id).exec();
 
     if (!post) {
       return {
@@ -113,7 +125,7 @@ export async function deletePost({ _id }: { _id: string | number }) {
 
     revalidatePath("/");
 
-    return { postId: post._id.toString() };
+    return { postId: (post._id as mongoose.Types.ObjectId).toString() };
   } catch (error: unknown) {
     return { error: error instanceof Error ? error.message : String(error) };
   }

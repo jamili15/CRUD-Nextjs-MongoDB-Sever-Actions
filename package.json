@@ -2,10 +2,11 @@
   "name": "crud-nextjs-mongodb-server-actions",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,7 +20,9 @@
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-final-form": "^6.5.9"
+    "react-final-form": "^6.5.9",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
   },
   "devDependencies": {
     "@types/node": "^20",

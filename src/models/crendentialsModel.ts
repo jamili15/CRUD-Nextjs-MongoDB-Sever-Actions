@@ -51,7 +51,7 @@ const crendentialsSchema: Schema = new mongoose.Schema(
     favoriteFoods: [],
   },
   {
-    collection: `${process.env.mongodb_collection}`,
+    collection: "post",
     timestamps: true,
   }
 );
